@@ -6,8 +6,10 @@ from rich import print
 from rich.progress import track
 from typing_extensions import Annotated
 
-import validations as validations
-from scanner import scan_port
+from .scanner import scan_port
+from .validations import is_valid_ipv4_address, is_valid_range, is_valid_threads
+
+app = typer.Typer()
 
 
 def parse_range(range_str: str) -> list[int]:
@@ -30,12 +32,13 @@ def parse_range(range_str: str) -> list[int]:
     return integers
 
 
+@app.command()
 def main(
     host: Annotated[
         str,
         typer.Argument(
             help="The host (IPv4 address) to scan for open ports.",
-            callback=validations.is_valid_ipv4_address,
+            callback=is_valid_ipv4_address,
         ),
     ],
     ports: Annotated[
@@ -44,7 +47,7 @@ def main(
             "--ports",
             "-p",
             help="The ports to scan, specified as a range (e.g., '1-80'), a single port (e.g., '80'), or a list of ports (e.g., '80,1024,3000').",
-            callback=validations.is_valid_range,
+            callback=is_valid_range,
         ),
     ] = "1-1024",
     num_threads: Annotated[
@@ -53,7 +56,7 @@ def main(
             "--num-threads",
             "-t",
             help="Number of threads to use for the scan. A higher value may speed up the scan, but use it cautiously to avoid overloading your system. If not specified or number of threads are not available, the default will be calculated based on the available CPU cores.",
-            callback=validations.is_valid_threads,
+            callback=is_valid_threads,
         ),
     ] = None,
 ) -> None:
@@ -67,7 +70,3 @@ def main(
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
         for port in track(port_list, description="Port scanning: "):
             executor.submit(scan_port, host, port)
-
-
-if __name__ == "__main__":
-    typer.run(main)

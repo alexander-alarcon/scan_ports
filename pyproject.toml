@@ -5,6 +5,7 @@ description = ""
 authors = ["Alexander Alarcon <walarcon14@gmail.com>"]
 readme = "README.md"
 packages = [{ include = "src" }]
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -15,4 +16,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-scan-ports = "src.main:main"
+scan-ports = "src.main:app"
