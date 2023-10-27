@@ -1,9 +1,30 @@
 from typing import Optional
 
 import typer
+from rich import print
 from typing_extensions import Annotated
 
 import validations as validations
+
+
+def parse_range(range_str: str) -> list[int]:
+    """
+    Parses a string representation of a range of integers and returns a list of integers.
+
+    Args:
+        range_str (str): The string representation of the range of integers.
+
+    Returns:
+        list[int]: A list of integers representing the range.
+    """
+    integers: list[int] = []
+    for range_part in range_str.split(","):
+        if "-" in range_part:
+            start, end = map(int, range_part.split("-"))
+            integers.extend(range(start, end + 1))
+        else:
+            integers.append(int(range_part))
+    return integers
 
 
 def main(
@@ -36,7 +57,8 @@ def main(
     """
     Scan a host for open ports.
     """
-    print(f"Scanning {host} for ports {ports} using {num_threads} threads.")
+    print(f"Scanning {host} for open ports...")
+    print(f"Ports to scan: {parse_range(ports)}")
 
 
 if __name__ == "__main__":
