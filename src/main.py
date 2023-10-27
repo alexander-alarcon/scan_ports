@@ -1,10 +1,13 @@
+import concurrent.futures
 from typing import Optional
 
 import typer
 from rich import print
+from rich.progress import track
 from typing_extensions import Annotated
 
 import validations as validations
+from scanner import scan_port
 
 
 def parse_range(range_str: str) -> list[int]:
@@ -58,7 +61,12 @@ def main(
     Scan a host for open ports.
     """
     print(f"Scanning {host} for open ports...")
-    print(f"Ports to scan: {parse_range(ports)}")
+
+    port_list: list[int] = parse_range(ports)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+        for port in track(port_list, description="Port scanning: "):
+            executor.submit(scan_port, host, port)
 
 
 if __name__ == "__main__":
