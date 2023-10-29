@@ -3,7 +3,7 @@ import socket
 from rich import print
 
 
-def scan_port(target_host: str, port: int) -> None:
+def scan_port(target_host: str, port: int, timeout: float) -> None:
     """
     Scans a specific port on a target host and prints whether the port is open or not.
 
@@ -17,7 +17,7 @@ def scan_port(target_host: str, port: int) -> None:
     sock = None
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(1)
+        sock.settimeout(timeout)
         result: int = sock.connect_ex((target_host, port))
 
         if result == 0:
