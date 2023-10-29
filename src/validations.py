@@ -108,3 +108,21 @@ def is_valid_threads(user_specified_threads: Optional[int]) -> int:
             num_threads = min(user_specified_threads, max_threads)
 
     return num_threads
+
+
+def is_valid_timeout(timeout: float) -> float:
+    """
+    Check if the given timeout is valid.
+
+    Args:
+        timeout (float): The timeout to be validated.
+
+    Raises:
+        BadParameter: If the timeout is not a positive number.
+
+    Returns:
+        None
+    """
+    if timeout <= 0:
+        raise BadParameter("Timeout must be a positive number.")
+    return timeout

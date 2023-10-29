@@ -7,7 +7,12 @@ from rich.progress import track
 from typing_extensions import Annotated
 
 from .scanner import scan_port
-from .validations import is_valid_ipv4_address, is_valid_range, is_valid_threads
+from .validations import (
+    is_valid_ipv4_address,
+    is_valid_range,
+    is_valid_threads,
+    is_valid_timeout,
+)
 
 app = typer.Typer()
 
@@ -59,6 +64,15 @@ def main(
             callback=is_valid_threads,
         ),
     ] = None,
+    timeout: Annotated[
+        float,
+        typer.Option(
+            "--timeout",
+            "-o",
+            help="The timeout in seconds for each request.",
+            callback=is_valid_timeout,
+        ),
+    ] = 1.0,
 ) -> None:
     """
     Scan a host for open ports.
@@ -69,4 +83,4 @@ def main(
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
         for port in track(port_list, description="Port scanning: "):
-            executor.submit(scan_port, host, port)
+            executor.submit(scan_port, host, port, timeout)
