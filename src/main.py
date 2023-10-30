@@ -68,7 +68,7 @@ def main(
         float,
         typer.Option(
             "--timeout",
-            "-o",
+            "-T",
             help="The timeout in seconds for each request.",
             callback=is_valid_timeout,
         ),
