@@ -40,6 +40,8 @@ Options:
 
   **--num-threads** or **-t** (optional): Number of threads to use for the scan. A higher value may speed up the scan, but use it cautiously to avoid overloading your system. If not specified or if the specified number of threads is not available, the script will use the default number of threads based on available CPU cores.
 
+  **--timeout** or **-T** (optional): The timeout for each port scan in seconds. If not specified or if the specified timeout is not available, the script will use the default timeout of 1 second.
+
 ### Example
 
 ```shell
